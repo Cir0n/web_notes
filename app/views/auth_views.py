@@ -17,6 +17,10 @@ class AuthViews:
         self.register_routes()
 
     def register_routes(self):
+        
+        @self.auth_bp.route("/", methods=["GET"])
+        def home():
+            return redirect(url_for("auth_bp.login"))
 
         @self.auth_bp.route("/login", methods=["GET", "POST"])
         def login():
