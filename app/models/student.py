@@ -8,7 +8,9 @@ class StudentModel:
     def get_student_by_id(self, student_id):
         query = """SELECT id, first_name, last_name, class_id FROM students
                     WHERE id = %s"""
-        result = self.db.query(query, (student_id,))  # Exécute la requête normalement
+        result = self.db.query(
+            query, (student_id,)
+        )  # Exécute la requête normalement
         return result[0] if result else None
 
     def get_all_students(self):

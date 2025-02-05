@@ -23,7 +23,9 @@ class AuthViews:
                 result = self.controller.login(username, password)
 
                 if "error" in result:
-                    return render_template("auth/login.html", message=result["error"])
+                    return render_template(
+                        "auth/login.html", message=result["error"]
+                    )
                 if result["role"] == "student":
                     return redirect(url_for("student_bp.student_dashboard"))
                 if result["role"] == "teacher":

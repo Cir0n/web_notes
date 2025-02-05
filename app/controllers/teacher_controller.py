@@ -79,7 +79,9 @@ class TeacherController:
         if not is_valid_grade(grade):
             return {"error: Les notes doivent être un nombre entre 0 et 20"}
 
-        self.grade_model.add_grade(teacher_id, student_id, subject_id, grade, comment)
+        self.grade_model.add_grade(
+            teacher_id, student_id, subject_id, grade, comment
+        )
 
     def get_student_grades(self, teacher_id, student_id):
         return self.grade_model.get_student_grades(teacher_id, student_id)

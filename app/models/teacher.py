@@ -5,7 +5,9 @@ class TeacherModel:
     def __init__(self):
         self.db = Database()
 
-    def create_teacher(self, user_id, first_name, last_name, class_ids, subject_ids):
+    def create_teacher(
+        self, user_id, first_name, last_name, class_ids, subject_ids
+    ):
         query = """INSERT INTO teachers ( id, first_name, last_name)
         VALUES (%s, %s, %s)"""
         self.db.execute(query, (user_id, first_name, last_name))
