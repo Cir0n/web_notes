@@ -1,12 +1,4 @@
-from flask import (
-    Blueprint,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from app.controllers.class_controller import ClassController
 from app.controllers.student_controller import StudentController
@@ -25,7 +17,6 @@ class AdminViews:
         self.register_routes()
 
     def register_routes(self):
-
         @self.admin_bp.route("/dashboard")
         @require_admin
         def admin_dashboard():
@@ -41,7 +32,7 @@ class AdminViews:
                 "admin/students.html",
                 students=students,
                 options=[o["name"] for o in options],
-                languages=[l["name"] for l in languages],
+                languages=[language["name"] for language in languages],
             )
 
         @self.admin_bp.route("/add_student", methods=["GET", "POST"])
@@ -70,10 +61,16 @@ class AdminViews:
                     selected_options,
                 )
 
-                if 'error' in result:
+                if "error" in result:
                     flash(result["error"])
-                    return render_template("admin/add_student.html", error=result['error'], classes=classes, languages=languages, options=options)
-                                    
+                    return render_template(
+                        "admin/add_student.html",
+                        error=result["error"],
+                        classes=classes,
+                        languages=languages,
+                        options=options,
+                    )
+
                 flash("etudiant ajouter avec succès")
                 return redirect(url_for("admin_bp.list_students"))
 
@@ -87,7 +84,7 @@ class AdminViews:
         @self.admin_bp.route("/delete_student/<student_id>", methods=["POST"])
         @require_admin
         def delete_student(student_id):
-            result = self.student_controller.delete_student(student_id)
+            self.student_controller.delete_student(student_id)
             flash("Etudiant supprimé avec succès")
             return redirect(url_for("admin_bp.list_students"))
 
@@ -104,7 +101,6 @@ class AdminViews:
         def add_teacher():
             subjects = self.subject_controller.get_all_subjects()
             classes = self.class_controller.get_all_classes()
-
             if request.method == "POST":
                 print(request.form)
                 username = request.form.get("username")
@@ -112,15 +108,17 @@ class AdminViews:
                 first_name = request.form.get("first_name")
                 last_name = request.form.get("last_name")
                 selected_classes = request.form.getlist("classes")
-                selected_subjects = request.form.getlist("subjects") 
+                selected_subjects = request.form.getlist("subjects")
                 if not selected_subjects:
                     error = "❌ Vous devez sélectionner au moins une matière."
                     print(error)
                     flash(error, "danger")
-                    return render_template("admin/add_teacher.html", 
-                                        error=error, 
-                                        classes=classes, 
-                                        subjects=subjects)
+                    return render_template(
+                        "admin/add_teacher.html",
+                        error=error,
+                        classes=classes,
+                        subjects=subjects,
+                    )
 
                 result = self.teacher_controller.create_teacher(
                     username,
@@ -130,12 +128,16 @@ class AdminViews:
                     selected_classes,
                     selected_subjects,
                 )
-                
-                if 'error' in result:
-                    flash(result['error'])
+
+                if "error" in result:
+                    flash(result["error"])
                     return render_template(
-                        "admin/add_teacher.html", error=result['error'], subjects=subjects, classes=classes)
-                
+                        "admin/add_teacher.html",
+                        error=result["error"],
+                        subjects=subjects,
+                        classes=classes,
+                    )
+
                 flash(result)
                 return redirect(url_for("admin_bp.list_teachers"))
 
@@ -146,6 +148,6 @@ class AdminViews:
         @self.admin_bp.route("/delete_teacher/<teacher_id>", methods=["POST"])
         @require_admin
         def delete_teacher(teacher_id):
-            result = self.teacher_controller.delete_teacher(teacher_id)
+            self.teacher_controller.delete_teacher(teacher_id)
             flash("Enseignant supprimé avec succès")
             return redirect(url_for("admin_bp.list_teachers"))

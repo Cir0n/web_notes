@@ -7,12 +7,9 @@ class UserModel:
         self.db = Database()
 
     def add_user(self, username, password, role):
-        hashed_password = bcrypt.generate_password_hash(password).decode(
-            "utf-8"
-        )
-        sql = (
-            "INSERT INTO users (username, password, role) VALUES (%s, %s, %s)"
-        )
+        hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+        sql = """INSERT INTO users (username, password, role)
+        VALUES (%s, %s, %s)"""
         self.db.execute(sql, (username, hashed_password, role))
         return self.db.cursor.lastrowid  # id user
 

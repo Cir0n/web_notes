@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.9.4"  # Mets à jour avec la dernière version si besoin
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  - repo: https://github.com/psf/black
+    rev: "25.1.0"
+    hooks:
+      - id: black
+
+  - repo: https://github.com/PyCQA/isort
+    rev: "6.0.0"
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: "7.1.1"
+    hooks:
+      - id: flake8
+        args: ["--ignore=E501,E751"]

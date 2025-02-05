@@ -1,12 +1,5 @@
-from flask import (
-    Blueprint,
-    flash,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import (Blueprint, flash, redirect, render_template, request,
+                   session, url_for)
 
 from app.controllers.student_controller import StudentController
 from app.controllers.teacher_controller import TeacherController
@@ -21,7 +14,6 @@ class TeacherViews:
         self.register_route()
 
     def register_route(self):
-
         @self.teacher_bp.route("/dashboard")
         @require_teacher
         def teacher_dashboard():
@@ -33,9 +25,7 @@ class TeacherViews:
         @require_teacher
         def class_students(class_id):
             students = self.controller.get_student_classes(class_id)
-            subjects = self.controller.get_teacher_subjects(
-                session.get("user_id")
-            )
+            subjects = self.controller.get_teacher_subjects(session.get("user_id"))
             return render_template(
                 "teacher/class_students.html",
                 students=students,
@@ -59,9 +49,7 @@ class TeacherViews:
             student_info = self.student_controller.get_student_info(student_id)
             class_id = student_info["class_id"] if student_info else None
 
-            return redirect(
-                url_for("teacher_bp.class_students", class_id=class_id)
-            )
+            return redirect(url_for("teacher_bp.class_students", class_id=class_id))
 
         @self.teacher_bp.route("/student/<int:student_id>")
         @require_teacher
@@ -87,6 +75,4 @@ class TeacherViews:
             self.controller.delete_grade(teacher_id, grade_id)
             flash("Note supprimée avec succès !")
 
-            return redirect(
-                url_for("teacher_bp.student_grades", student_id=student_id)
-            )
+            return redirect(url_for("teacher_bp.student_grades", student_id=student_id))

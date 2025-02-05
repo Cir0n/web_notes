@@ -1,11 +1,5 @@
-from flask import (
-    Blueprint,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import (Blueprint, redirect, render_template, request, session,
+                   url_for)
 
 from app.controllers.auth_controller import AuthController
 
@@ -17,7 +11,6 @@ class AuthViews:
         self.register_routes()
 
     def register_routes(self):
-        
         @self.auth_bp.route("/", methods=["GET"])
         def home():
             return redirect(url_for("auth_bp.login"))
@@ -30,15 +23,11 @@ class AuthViews:
                 result = self.controller.login(username, password)
 
                 if "error" in result:
-                    return render_template(
-                        "auth/login.html", message=result["error"]
-                    )
+                    return render_template("auth/login.html", message=result["error"])
                 if result["role"] == "student":
                     return redirect(url_for("student_bp.student_dashboard"))
                 if result["role"] == "teacher":
-                    return redirect(
-                        url_for("teacher_bp.teacher_dashboard")
-                    )  # FIXME: teacher_bp is not defined mais marche pour student
+                    return redirect(url_for("teacher_bp.teacher_dashboard"))
                 if result["role"] == "admin":
                     return redirect(url_for("admin_bp.admin_dashboard"))
 
@@ -53,5 +42,6 @@ class AuthViews:
         @self.auth_bp.route("/profile")
         def profile():
             if "user_id" in session:
-                return f"User {session['user_id']} is logged in as {session['role']}"
+                return f"""User {session["user_id"]} is logged
+                in as {session["role"]}"""
             return "No user logged in"

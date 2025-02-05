@@ -6,11 +6,9 @@ class StudentModel:
         self.db = Database()
 
     def get_student_by_id(self, student_id):
-        query = """SELECT id, first_name, last_name, class_id FROM students 
+        query = """SELECT id, first_name, last_name, class_id FROM students
                     WHERE id = %s"""
-        result = self.db.query(
-            query, (student_id,)
-        )  # Exécute la requête normalement
+        result = self.db.query(query, (student_id,))  # Exécute la requête normalement
         return result[0] if result else None
 
     def get_all_students(self):
@@ -34,13 +32,13 @@ class StudentModel:
         selected_languages,
         selected_options,
     ):
-        query = """INSERT INTO students ( id, first_name, last_name, class_id) 
+        query = """INSERT INTO students ( id, first_name, last_name, class_id)
                 VALUES (%s, %s, %s, %s)"""
         self.db.execute(query, (user_id, first_name, last_name, class_id))
 
-        sql_principal_subject = (
-            "Select id from subjects where type = 'Principal'"
-        )
+        sql_principal_subject = """Select id from subjects
+        where type = 'Principal'
+        """
         principal_subjects = self.db.query(sql_principal_subject)
         for subject in principal_subjects:
             query = """INSERT INTO student_subject (student_id, subject_id)
@@ -48,7 +46,7 @@ class StudentModel:
             self.db.execute(query, (user_id, subject["id"]))
 
         for language in selected_languages:
-            query = """INSERT INTO student_subject (student_id, subject_id) 
+            query = """INSERT INTO student_subject (student_id, subject_id)
                     VALUES (%s, %s)"""
             self.db.execute(query, (user_id, language))
 
@@ -79,7 +77,7 @@ class StudentModel:
         WHERE ss.student_id = %s
         """
         return self.db.query(query, (student_id,))
-    
+
     def get_subject_by_id(self, subject_id):
         query = "SELECT id, name, type FROM subjects WHERE id = %s"
         result = self.db.query(query, (subject_id,))

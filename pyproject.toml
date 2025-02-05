@@ -3,32 +3,44 @@ name = "webnotes"
 version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
-    {name = "Cir0n", email = ""},
+    {name = "Cir0n", email = "philippe.baba@proton.me"},
 ]
-dependencies = ["mysql-connector-python>=9.2.0", "flask>=3.1.0", "python-dotenv>=1.0.1", "flask-bcrypt>=1.0.1"]
+dependencies = ["mysql-connector-python>=9.2.0", "flask>=3.1.0", "python-dotenv>=1.0.1", "flask-bcrypt>=1.0.1", "webnotes @ file:///${PROJECT_ROOT}/"]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
 
-
-[tool.pdm]
-distribution = false
-
-[tool.pdm.dev-dependencies]
-lint = [
-    "black>=24.3.0",
-    "isort>=5.13.2",
-    "flake8>=7.0.0",
-]
 
 [dependency-groups]
 dev = [
     "isort>=6.0.0",
     "black>=25.1.0",
     "flake8>=7.1.1",
+    "pre-commit>=4.1.0",
 ]
 lint = [
     "black>=24.3.0",
     "isort>=5.13.2",
     "flake8>=7.0.0",
+    "ruff>=0.9.4",
 ]
+
+[tool.ruff]
+line-length = 100
+[tool.ruff.lint]
+select = ["B", "C4", "E", "F", "I", "W", "UP"]
+ignore = ["E501", "W191", "E741"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+lint = { cmd = "ruff check . && black --check . && isort --check-only . && flake8 ." }
+fmt = { cmd = "ruff format . && isort . && black ." }
+
+
+[tool.setuptools]
+packages = ["app"]

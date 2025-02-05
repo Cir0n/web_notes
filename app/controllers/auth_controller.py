@@ -26,4 +26,3 @@ class AuthController:
     def logout(self):
         session.clear()
         return {"success": "Logout successful"}
-

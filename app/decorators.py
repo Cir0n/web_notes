@@ -13,6 +13,7 @@ def require_teacher(f):
 
     return decorated_function
 
+
 def require_admin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -22,6 +23,7 @@ def require_admin(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 def require_student(f):
     @wraps(f)
