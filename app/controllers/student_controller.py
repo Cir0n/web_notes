@@ -1,7 +1,7 @@
 from app.models.student import StudentModel
 from app.models.grade import GradeModel
 from app.models.user import UserModel
-from app.utils import is_valid_name, is_valid_username, is_valid_grade
+from app.utils import is_valid_name, is_valid_username, is_valid_password
 
 
 class StudentController:
@@ -34,6 +34,9 @@ class StudentController:
         
         if not is_valid_username(username):
             return {"error": "Le nom d'utilisateur doit contenir que des lettre, chiffre et underscores."}
+        
+        if not is_valid_password(password):
+            return {"error": "Le mot de passe doit contenir au moins 8 caractères"}
         
         if self.user_model.get_user_by_username(username):
             return {"error": "Le nom d'utilisateur est déjà utilisé"}

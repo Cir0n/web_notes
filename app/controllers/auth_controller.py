@@ -27,27 +27,3 @@ class AuthController:
         session.clear()
         return {"success": "Logout successful"}
 
-    def register(
-        self,
-        username,
-        password,
-        role,
-        first_name,
-        last_name,
-        additional_info=None,
-    ):
-        if self.user_model.get_user_by_username(username):
-            return {"error": "Username already exists"}
-
-        user_id = self.user_model.add_user(username, password, role)
-
-        if role == "student":
-            self.student_model.create_student(
-                user_id, first_name, last_name, additional_info
-            )
-        elif role == "teacher":
-            self.teacher_model.create_teacher(
-                user_id, first_name, last_name, additional_info
-            )
-
-        return {"success": "Registration successful, you can now log in"}

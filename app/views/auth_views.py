@@ -41,34 +41,6 @@ class AuthViews:
                 return redirect("/profile")
             return render_template("auth/login.html")
 
-        @self.auth_bp.route("/register", methods=["GET", "POST"])
-        def register():
-            if request.method == "POST":
-                username = request.form.get("username")
-                password = request.form.get("password")
-                role = request.form.get("role")
-                first_name = request.form.get("first_name")
-                last_name = request.form.get("last_name")
-                additional_info = request.form.get("additional_info")
-
-                result = self.controller.register(
-                    username,
-                    password,
-                    role,
-                    first_name,
-                    last_name,
-                    additional_info,
-                )
-
-                if "error" in result:
-                    return render_template(
-                        "auth/register.html", message=result["error"]
-                    )
-
-                return redirect(url_for("auth_bp.login"))
-
-            return render_template("auth/register.html")
-
         @self.auth_bp.route("/logout")
         def logout():
             self.controller.logout()

@@ -20,12 +20,6 @@ class TeacherViews:
         self.student_controller = StudentController()
         self.register_route()
 
-    def require_teacher(self):
-        if session.get("role") not in ["teacher", "admin"]:
-            flash("You must be a teacher to access this page")
-            return render_template("errors/unauthorized.html")
-        return None
-
     def register_route(self):
 
         @self.teacher_bp.route("/dashboard")
@@ -36,6 +30,7 @@ class TeacherViews:
             return render_template("teacher/dashboard.html", classes=classes)
 
         @self.teacher_bp.route("/class/<int:class_id>")
+        @require_teacher
         def class_students(class_id):
             students = self.controller.get_student_classes(class_id)
             subjects = self.controller.get_teacher_subjects(
@@ -49,6 +44,7 @@ class TeacherViews:
             )
 
         @self.teacher_bp.route("/add_grade", methods=["POST"])
+        @require_teacher
         def add_grade():
             teacher_id = session.get("user_id")
             student_id = request.form["student_id"]
@@ -68,6 +64,7 @@ class TeacherViews:
             )
 
         @self.teacher_bp.route("/student/<int:student_id>")
+        @require_teacher
         def student_grades(student_id):
             teacher_id = session.get("user_id")
             grades = self.controller.get_student_grades(teacher_id, student_id)
@@ -82,6 +79,7 @@ class TeacherViews:
             )
 
         @self.teacher_bp.route("/delete_grade", methods=["POST"])
+        @require_teacher
         def delete_grade():
             teacher_id = session.get("user_id")
             grade_id = request.form["grade_id"]

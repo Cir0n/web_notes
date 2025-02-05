@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session
 
 from app.controllers.student_controller import StudentController
+from app.decorators import require_student
 
 
 class StudentViews:
@@ -12,6 +13,7 @@ class StudentViews:
     def register_routes(self):
 
         @self.student_bp.route("/me")
+        @require_student
         def student_dashboard():                            #TODO: Revoir les infos présente dans le dashboard peut être ajouter un emploie du temps etc...
             student_id = session.get("user_id")
             
@@ -24,6 +26,7 @@ class StudentViews:
             return render_template('student/dashboard.html', grades=grades, subjects=subjects, student_id=student_id)
 
         @self.student_bp.route("/subject/<int:subject_id>")
+        @require_student
         def student_subject_grades(subject_id):
             student_id = session.get("user_id")
 
