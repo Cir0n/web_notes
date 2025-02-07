@@ -5,7 +5,7 @@ description = "Default template for PDM package"
 authors = [
     {name = "Cir0n", email = "philippe.baba@proton.me"},
 ]
-dependencies = ["mysql-connector-python>=9.2.0", "flask>=3.1.0", "python-dotenv>=1.0.1", "flask-bcrypt>=1.0.1", "webnotes @ file:///${PROJECT_ROOT}/"]
+dependencies = ["mysql-connector-python>=9.2.0", "flask>=3.1.0", "python-dotenv>=1.0.1", "flask-bcrypt>=1.0.1", "webnotes @ file:///${PROJECT_ROOT}/", "cryptography>=44.0.0"]
 requires-python = "==3.12.*"
 readme = "README.md"
 license = {text = "MIT"}
@@ -40,8 +40,8 @@ distribution = false
 [tool.pdm.scripts]
 lint = { composite = [
     "pdm run ruff format app",
-    "pdm run ruff check app",
     "pdm run black -l 79 app",
+    "pdm run ruff check app",
     "pdm run flake8 app"
 ] }
 
