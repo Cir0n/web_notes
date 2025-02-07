@@ -1,5 +1,6 @@
 from app import bcrypt
 from app.config import Database
+from app.utils import decrypt_data, encrypt_data, hash_username
 
 
 class UserModel:
@@ -10,15 +11,26 @@ class UserModel:
         hashed_password = bcrypt.generate_password_hash(password).decode(
             "utf-8"
         )
-        sql = """INSERT INTO users (username, password, role)
-        VALUES (%s, %s, %s)"""
-        self.db.execute(sql, (username, hashed_password, role))
+        encrypted_username = encrypt_data(username)
+        hmac_username = hash_username(username)
+        sql = """INSERT INTO users (username, password, role, hmac_username)
+        VALUES (%s, %s, %s, %s)"""
+        self.db.execute(
+            sql, (encrypted_username, hashed_password, role, hmac_username)
+        )
         return self.db.cursor.lastrowid  # id user
 
     def get_user_by_username(self, username):
-        sql = "SELECT * FROM users WHERE username = %s"
-        result = self.db.query(sql, (username,))
-        return result[0] if result else None
+        hmac_username = hash_username(username)
+
+        sql = "SELECT * FROM users WHERE hmac_username = %s"
+        result = self.db.query(sql, (hmac_username,))
+        print(result)
+        if result:
+            user = result[0]
+            user["username"] = decrypt_data(user["username"])
+            return user
+        return None
 
     def check_password(self, username, password):
         user = self.get_user_by_username(username)

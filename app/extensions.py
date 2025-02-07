@@ -15,3 +15,6 @@ if not ENCRYPTION_KEY:
     raise ValueError("No encryption key set for the application")
 
 CIPHER = Fernet(ENCRYPTION_KEY.encode())
+
+HMAC_SECRET_KEY = os.getenv("HMAC_SECRET_KEY")
+HMAC_KEY = bytes.fromhex(HMAC_SECRET_KEY)

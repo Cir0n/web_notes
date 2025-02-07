@@ -1,6 +1,8 @@
+import hashlib
+import hmac
 import re
 
-from app.extensions import CIPHER
+from app.extensions import CIPHER, HMAC_KEY
 
 
 def is_valid_name(name):
@@ -29,3 +31,7 @@ def encrypt_data(data):
 
 def decrypt_data(data):
     return CIPHER.decrypt(data.encode()).decode()
+
+
+def hash_username(username):
+    return hmac.new(HMAC_KEY, username.encode(), hashlib.sha256).hexdigest()
