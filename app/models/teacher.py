@@ -1,4 +1,5 @@
 from app.config import Database
+from app.utils import decrypt_data, encrypt_data
 
 
 class TeacherModel:
@@ -8,9 +9,13 @@ class TeacherModel:
     def create_teacher(
         self, user_id, first_name, last_name, class_ids, subject_ids
     ):
+        encrypted_fist_name = encrypt_data(first_name)
+        encrypted_last_name = encrypt_data(last_name)
         query = """INSERT INTO teachers ( id, first_name, last_name)
         VALUES (%s, %s, %s)"""
-        self.db.execute(query, (user_id, first_name, last_name))
+        self.db.execute(
+            query, (user_id, encrypted_fist_name, encrypted_last_name)
+        )
 
         if class_ids:
             for class_id in class_ids:
@@ -37,12 +42,20 @@ class TeacherModel:
         LEFT JOIN subjects s ON ts.subject_id = s.id
         GROUP BY t.id
         """
-        return self.db.query(query)
+        result = self.db.query(query)
+        for teacher in result:
+            teacher["first_name"] = decrypt_data(teacher["first_name"])
+            teacher["last_name"] = decrypt_data(teacher["last_name"])
+        return result
 
     def get_teacher_by_id(self, teacher_id):
         query = "SELECT * FROM teachers WHERE id = %s"
         result = self.db.query(query, (teacher_id,))
-        return result[0] if result else None
+        if result:
+            teacher = result[0]
+            teacher["first_name"] = decrypt_data(teacher["first_name"])
+            teacher["last_name"] = decrypt_data(teacher["last_name"])
+            return teacher
 
     def delete_teacher(self, teacher_id):
         query = "DELETE FROM users WHERE id = %s"

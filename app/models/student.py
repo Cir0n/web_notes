@@ -1,4 +1,5 @@
 from app.config import Database
+from app.utils import decrypt_data, encrypt_data
 
 
 class StudentModel:
@@ -14,7 +15,7 @@ class StudentModel:
         return result[0] if result else None
 
     def get_all_students(self):
-        sql = """
+        query = """
         SELECT s.id, s.first_name, s.last_name, c.name AS class_name,
             GROUP_CONCAT(DISTINCT sub.name SEPARATOR ', ') AS subjects
         FROM students s
@@ -23,7 +24,15 @@ class StudentModel:
         LEFT JOIN subjects sub ON ss.subject_id = sub.id
         GROUP BY s.id, s.first_name, s.last_name, c.name
         """
-        return self.db.query(sql)
+        result = self.db.query(query)
+
+        # Vérifier les données brutes récupérées
+        print("Données récupérées depuis la base :", result)
+
+        for student in result:
+            student["first_name"] = decrypt_data(student["first_name"])
+            student["last_name"] = decrypt_data(student["last_name"])
+        return result
 
     def create_student(
         self,
@@ -34,9 +43,14 @@ class StudentModel:
         selected_languages,
         selected_options,
     ):
+        encrypted_fist_name = encrypt_data(first_name)
+        encrypted_last_name = encrypt_data(last_name)
         query = """INSERT INTO students ( id, first_name, last_name, class_id)
                 VALUES (%s, %s, %s, %s)"""
-        self.db.execute(query, (user_id, first_name, last_name, class_id))
+        self.db.execute(
+            query,
+            (user_id, encrypted_fist_name, encrypted_last_name, class_id),
+        )
 
         sql_principal_subject = """Select id from subjects
         where type = 'Principal'
@@ -83,4 +97,8 @@ class StudentModel:
     def get_subject_by_id(self, subject_id):
         query = "SELECT id, name, type FROM subjects WHERE id = %s"
         result = self.db.query(query, (subject_id,))
-        return result[0] if result else None
+        if result:
+            student = result[0]
+            student["first_name"] = decrypt_data(student["first_name"])
+            student["last_name"] = decrypt_data(student["last_name"])
+            return student
