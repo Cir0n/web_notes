@@ -37,7 +37,9 @@ class AdminViews:
 
         @self.admin_bp.route("/add_student", methods=["GET", "POST"])
         @require_admin
-        def add_student():  # TODO: faire en sorte qu'il n'y ait pas besoin de re démarrer le serveur flask pour pouvoir utiliser le compte d'un profil que l'on vien d'ajouter
+        def add_student():  # TODO: faire en sorte qu'il n'y ait pas besoin de
+            #  re démarrer le serveur flask pour pouvoir utiliser le compte
+            #  d'un profil que l'on vien d'ajouter
             classes = self.class_controller.get_all_classes()
             languages = self.subject_controller.get_languages()
             options = self.subject_controller.get_options()

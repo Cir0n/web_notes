@@ -38,8 +38,12 @@ convention = "google"
 distribution = false
 
 [tool.pdm.scripts]
-lint = { cmd = "ruff check . && black --check . && isort --check-only . && flake8 ." }
-fmt = { cmd = "ruff format . && isort . && black ." }
+lint = { composite = [
+    "pdm run ruff format app",
+    "pdm run ruff check app",
+    "pdm run black -l 79 app",
+    "pdm run flake8 app"
+] }
 
 
 [tool.setuptools]

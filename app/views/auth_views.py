@@ -1,5 +1,11 @@
-from flask import (Blueprint, redirect, render_template, request, session,
-                   url_for)
+from flask import (
+    Blueprint,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 
 from app.controllers.auth_controller import AuthController
 

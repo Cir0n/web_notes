@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: pdm-lint
+        name: Run PDM lint
+        entry: pdm run lint
+        language: system
+        pass_filenames: false
