@@ -25,7 +25,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pdm
-          pdm cache clear -y  # Nettoyer le cache PDM pour éviter des conflits
+          pdm cache clear  # Suppression du cache sans -y
           pdm install
 
       - name: Run linters
@@ -48,13 +48,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pdm
-          pdm cache clear -y
+          pdm cache clear  # Suppression du cache sans -y
           pdm install
 
       - name: Start Flask application
         run: |
           pdm run flask run --host=0.0.0.0 --port=5000 > flask.log 2>&1 &
-          sleep 15  # Augmenté à 15s pour éviter les erreurs de démarrage
+          sleep 15  # Augmenté à 15s pour s'assurer du démarrage du serveur
 
       - name: ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
