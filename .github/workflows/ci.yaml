@@ -57,6 +57,7 @@ jobs:
         with:
           target: "http://localhost:5000"
           fail_action: false  # Passe à true si tu veux bloquer le CI en cas de vulnérabilités
+          docker: false
           rules_file_name: ".zap-rules.tsv"
 
       - name: Upload ZAP Report
