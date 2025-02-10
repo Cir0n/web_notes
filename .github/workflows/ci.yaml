@@ -57,7 +57,6 @@ jobs:
         with:
           target: "http://localhost:5000"
           fail_action: false  # Passe à true si tu veux bloquer le CI en cas de vulnérabilités
-          docker: false
           cmd_options: "-a -J report.json -r report.html"  # Génère un rapport JSON et HTML
 
       - name: Upload ZAP Report
