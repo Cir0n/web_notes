@@ -79,7 +79,11 @@ class StudentModel:
         From students
         WHERE class_id = %s
         """
-        return self.db.query(query, (class_id,))
+        students = self.db.query(query, (class_id,))
+        for student in students:
+            student["first_name"] = decrypt_data(student["first_name"])
+            student["last_name"] = decrypt_data(student["last_name"])
+        return students
 
     def delete_student(self, student_id):
         query = "DELETE FROM users WHERE id = %s"
