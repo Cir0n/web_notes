@@ -1,7 +1,8 @@
 import os
+import secrets
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template, request, session
 
 from app.extensions import bcrypt
 from app.views.admin_view import AdminViews
@@ -16,6 +17,32 @@ def create_app():
     app = Flask(__name__)
 
     app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY")
+
+    @app.before_request
+    def add_csrf_token():
+        """
+        Ajoute un token CSRF unique dans la session si inexistant.
+        Cela empêche les attaques CSRF en exigeant un token valide pour chaque
+        requête POST, PUT, DELETE.
+        """
+        if "csrf_token" not in session:
+            session["csrf_token"] = secrets.token_hex(
+                32
+            )  # Génération du token CSRF
+            session.modified = True
+
+    @app.before_request
+    def csrf_protect():
+        """
+        Vérifie la présence du token CSRF pour toutes les requêtes sensibles.
+        Empêche toute requête sans un token CSRF valide.
+        """
+        if request.method in ["POST", "PUT", "DELETE"]:
+            token = request.form.get("csrf_token") or request.headers.get(
+                "X-CSRFToken"
+            )
+            if not token or token != session.get("csrf_token"):
+                return render_template("errors/csrf_error.html"), 403
 
     bcrypt.init_app(app)
 

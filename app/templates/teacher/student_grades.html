@@ -27,6 +27,7 @@
                             <td> 
                                 <!-- Formulaire pour supprimer une note -->
                                 <form action="{{ url_for('teacher_bp.delete_grade') }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
                                     <input type="hidden" name="grade_id" value="{{ grade.id }}">
                                     <input type="hidden" name="student_id" value="{{ student_id }}">
                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette note ?')">

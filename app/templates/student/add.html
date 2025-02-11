@@ -10,6 +10,7 @@
     <div class="container mt-5">
         <h1 class="mb-4">Add a New Student</h1>
         <form method="POST" action="/students/add">
+            <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
             <div class="mb-3">
                 <label for="first_name" class="form-label">First Name</label>
                 <input type="text" id="first_name" name="first_name" class="form-control" required>

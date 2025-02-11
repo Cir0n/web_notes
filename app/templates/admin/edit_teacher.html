@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Editer un Professeur</h2>
+    <form action="{{ url_for('admin_bp.edit_teacher', teacher_id=teacher.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Prénom :</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" required 
+                           value="{{ teacher.first_name }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="last_name" class="form-label">Nom :</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" required 
+                           value="{{ teacher.last_name }}">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3 border p-3 rounded">
+                    <label class="form-label fw-bold">Classe :</label>
+                    {% for class_ in classes %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="class" value="{{ class_.id }}"
+                                   {% if class_.id in teacher_class_ids  %}checked{% endif %}>
+                            <label class="form-check-label">{{ class_.name }}</label>
+                        </div>  
+                    {% endfor %}
+                </div>
+
+                <div class="mb-3 border p-3 rounded">
+                    <label class="form-label fw-bold">Matière :</label>
+                    {% for subject in subjects %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="subjects" value="{{ subject.id }}"
+                                   {% if subject.id in teacher_subject_ids %}checked{% endif %}>
+                            <label class="form-check-label">{{ subject.name }}</label>
+                        </div>
+                    {% endfor %}
+                </div>                
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-primary px-4">Mettre à jour</button>
+            <a href="{{ url_for('admin_bp.list_teachers') }}" class="btn btn-secondary px-4">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

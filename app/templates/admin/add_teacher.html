@@ -11,6 +11,7 @@
     {% endif %}
 
     <form action="{{ url_for('admin_bp.add_teacher') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session['csrf_token'] }}">
         <div class="row">
             <!-- Colonne 1 : Informations générales -->
             <div class="col-md-6">
