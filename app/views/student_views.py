@@ -5,16 +5,32 @@ from app.decorators import require_student
 
 
 class StudentViews:
+    """
+    StudentViews handles the routes and views for student-related operations.
+    """
+
     def __init__(self):
+        """
+        Initializes the StudentViews with the necessary controller and
+        registers the routes.
+        """
         self.student_bp = Blueprint("student_bp", __name__)
         self.controller = StudentController()
         self.register_routes()
 
     def register_routes(self):
+        """
+        Registers the routes for student-related operations.
+        """
+
         @self.student_bp.route("/me")
         @require_student
-        def student_dashboard():  # TODO: Revoir les infos présente dans
-            # le dashboard peut être ajouter un emploie du temps etc...
+        def student_dashboard():
+            """
+            Renders the student dashboard.
+
+            :return: The rendered template for the student dashboard.
+            """
             student_id = session.get("user_id")
 
             if session.get("role") != "student":
@@ -33,6 +49,12 @@ class StudentViews:
         @self.student_bp.route("/subject/<int:subject_id>")
         @require_student
         def student_subject_grades(subject_id):
+            """
+            Renders the grades of a specific student in a specific subject.
+
+            :param subject_id: The ID of the subject.
+            :return: The rendered template for the subject grades.
+            """
             student_id = session.get("user_id")
 
             if session.get("role") != "student":

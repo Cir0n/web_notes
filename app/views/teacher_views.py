@@ -14,16 +14,33 @@ from app.decorators import require_teacher
 
 
 class TeacherViews:
+    """
+    TeacherViews handles the routes and views for teacher-related operations.
+    """
+
     def __init__(self):
+        """
+        Initializes the TeacherViews with the necessary controllers and
+        registers the routes.
+        """
         self.teacher_bp = Blueprint("teacher_bp", __name__)
         self.controller = TeacherController()
         self.student_controller = StudentController()
         self.register_route()
 
     def register_route(self):
+        """
+        Registers the routes for teacher-related operations.
+        """
+
         @self.teacher_bp.route("/dashboard")
         @require_teacher
         def teacher_dashboard():
+            """
+            Renders the teacher dashboard.
+
+            :return: The rendered template for the teacher dashboard.
+            """
             teacher_id = session.get("user_id")
             classes = self.controller.get_teacher_classes(teacher_id)
             return render_template("teacher/dashboard.html", classes=classes)
@@ -31,6 +48,12 @@ class TeacherViews:
         @self.teacher_bp.route("/class/<int:class_id>")
         @require_teacher
         def class_students(class_id):
+            """
+            Renders the list of students in a specific class.
+
+            :param class_id: The ID of the class.
+            :return: The rendered template for the class students.
+            """
             students = self.controller.get_student_classes(class_id)
             subjects = self.controller.get_teacher_subjects(
                 session.get("user_id")
@@ -45,6 +68,11 @@ class TeacherViews:
         @self.teacher_bp.route("/add_grade", methods=["POST"])
         @require_teacher
         def add_grade():
+            """
+            Adds a grade for a student.
+
+            :return: Redirects to the class students page.
+            """
             teacher_id = session.get("user_id")
             student_id = request.form["student_id"]
             subject_id = request.form["subject_id"]
@@ -65,6 +93,12 @@ class TeacherViews:
         @self.teacher_bp.route("/student/<int:student_id>")
         @require_teacher
         def student_grades(student_id):
+            """
+            Renders the grades of a specific student.
+
+            :param student_id: The ID of the student.
+            :return: The rendered template for the student grades.
+            """
             teacher_id = session.get("user_id")
             grades = self.controller.get_student_grades(teacher_id, student_id)
             student_info = self.student_controller.get_student_info(student_id)
@@ -80,6 +114,11 @@ class TeacherViews:
         @self.teacher_bp.route("/delete_grade", methods=["POST"])
         @require_teacher
         def delete_grade():
+            """
+            Deletes a grade for a student.
+
+            :return: Redirects to the student grades page.
+            """
             teacher_id = session.get("user_id")
             grade_id = request.form["grade_id"]
             student_id = request.form.get("student_id")
